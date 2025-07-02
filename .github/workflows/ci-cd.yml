@@ -28,7 +28,6 @@ jobs:
         distribution: temurin
         java-version: ${{ env.JAVA_VERSION }}
 
-
     #Caches the Maven dependencies (~/.m2 folder) between runs for faster builds. 
     #Cache key is based on OS + hash of your pom.xml files (to invalidate cache when dependencies change).
     - name: Cache Maven
@@ -37,6 +36,10 @@ jobs:
         path: ~/.m2
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-maven
+
+    # Make Maven wrapper executable to avoid permission denied error
+    - name: Make Maven wrapper executable
+      run: chmod +x mvnw
 
     #Runs Maven wrapper to build your project and run tests (clean verify).
     - name: Build & Test

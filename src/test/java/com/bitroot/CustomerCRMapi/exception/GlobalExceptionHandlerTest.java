@@ -6,28 +6,34 @@ import com.bitroot.CustomerCRMapi.service.CustomerService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 class GlobalExceptionHandlerTest {
 
-    private MockMvc mockMvc;
+    @Mock
     private CustomerService customerService;
-    private ObjectMapper objectMapper = new ObjectMapper();
+
+    @InjectMocks
+    private CustomerController customerController;
+
+    private MockMvc mockMvc;
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
-        customerService = mock(CustomerService.class);
 
-        CustomerController customerController = new CustomerController(customerService);
         mockMvc = MockMvcBuilders
                 .standaloneSetup(customerController)
                 .setControllerAdvice(new GlobalExceptionHandler())
@@ -46,25 +52,24 @@ class GlobalExceptionHandlerTest {
 
     @Test
     void whenInvalidCustomer_thenReturn400WithValidationMessage() throws Exception {
-        CustomerDto invalidDto = new CustomerDto(); // all fields null
+        CustomerDto invalidDto = new CustomerDto(); // fields are null
 
         mockMvc.perform(post("/api/customers")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidDto)))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("First name is required")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Last name is required")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Email is required")));
+                .andExpect(content().string(containsString("First name is required")))
+                .andExpect(content().string(containsString("Last name is required")))
+                .andExpect(content().string(containsString("Email is required")));
     }
-
 
     @Test
     void whenUnexpectedException_thenReturn500() throws Exception {
-        when(customerService.getCustomerById(99L))
+        when(customerService.getCustomerById(anyLong()))
                 .thenThrow(new RuntimeException("Unexpected DB error"));
 
-        mockMvc.perform(get("/api/customers/99"))
+        mockMvc.perform(get("/api/customers/1"))
                 .andExpect(status().isInternalServerError())
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("An error occurred")));
+                .andExpect(content().string(containsString("An error occurred")));
     }
 }
