@@ -8,8 +8,8 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  #IMAGE_NAME: KatlegoRaymond/CustomerCRMapi
-  IMAGE_NAME: ${{ github.repository }}   # ghcr.io/KatlegoRaymond/CustomerCRMapi
+  #IMAGE_NAME: katlegoraymond/customercrmapi
+  IMAGE_NAME: ${{ github.repository | toLower }} # ghcr.io/KatlegoRaymond/customercrmapi
   JAVA_VERSION: '17'
 
 jobs:
@@ -43,7 +43,7 @@ jobs:
 
     #Runs Maven wrapper to build your project and run tests (clean verify).
     - name: Build & Test
-      run: mvn -B clean verify
+      run: ./mvnw -B clean verify
 
   docker-push:
     needs: build-test
