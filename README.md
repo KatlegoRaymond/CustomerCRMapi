@@ -32,6 +32,7 @@ A RESTful backend API for managing customers and addresses, built with Spring Bo
 
 ## Project Structure
 
+```
 CustomerCRMapi/
 │
 ├── src/
@@ -81,7 +82,7 @@ CustomerCRMapi/
 ├── .gitignore
 ├── pom.xml
 └── README.md
-
+```
 
 ---
 
