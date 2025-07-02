@@ -182,6 +182,8 @@ CustomerCRMapi/
 ### Author
    
    Created by Katlego Raymond Mpete
+   
    Email: katlegoraymond.mpete@gmail.com
+   
    LinkedIn: https://www.linkedin.com/in/katlego-raymond-mpete-0159631b7/
 
