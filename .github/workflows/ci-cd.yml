@@ -43,7 +43,7 @@ jobs:
 
     #Runs Maven wrapper to build your project and run tests (clean verify).
     - name: Build & Test
-      run: ./mvnw -B clean verify
+      run: mvn -B clean verify
 
   docker-push:
     needs: build-test
