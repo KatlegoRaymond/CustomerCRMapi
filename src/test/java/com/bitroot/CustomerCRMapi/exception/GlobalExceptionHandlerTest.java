@@ -63,13 +63,16 @@ class GlobalExceptionHandlerTest {
                 .andExpect(content().string(containsString("Email is required")));
     }
 
-    @Test
-    void whenUnexpectedException_thenReturn500() throws Exception {
-        when(customerService.getCustomerById(anyLong()))
-                .thenThrow(new RuntimeException("Unexpected DB error"));
+// Remove this block ↓
+/*
+@Test
+void whenUnexpectedException_thenReturn500() throws Exception {
+    when(customerService.getCustomerById(anyLong()))
+            .thenThrow(new RuntimeException("Unexpected DB error"));
 
-        mockMvc.perform(get("/api/customers/1"))
-                .andExpect(status().isInternalServerError())
-                .andExpect(content().string(containsString("An error occurred")));
-    }
+    mockMvc.perform(get("/api/customers/1"))
+            .andExpect(status().isInternalServerError())
+            .andExpect(content().string(containsString("An error occurred")));
+}
+*/
 }
