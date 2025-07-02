@@ -125,10 +125,11 @@ CustomerCRMapi/
 
 4. Access API endpoints:
 
-   -cmd
+   ```
    http://localhost:8080/api/customers
-   http://localhost:8080/api/addresses
    
+   http://localhost:8080/api/addresses
+   ```
 ---
 
 ### API Endpoints
