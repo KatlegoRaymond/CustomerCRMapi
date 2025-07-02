@@ -1,0 +1,177 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > AddressController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.bitroot.CustomerCRMapi.controller</a>
+</div>
+
+<h1>Coverage Summary for Class: AddressController (com.bitroot.CustomerCRMapi.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">AddressController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (11/11)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.bitroot.CustomerCRMapi.controller;
+&nbsp;
+&nbsp;import com.bitroot.CustomerCRMapi.dto.AddressDto;
+&nbsp;import com.bitroot.CustomerCRMapi.model.Address;
+&nbsp;import com.bitroot.CustomerCRMapi.service.AddressService;
+&nbsp;import jakarta.validation.Valid;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@RestController
+&nbsp;@RequestMapping(&quot;/api/addresses&quot;)
+&nbsp;public class AddressController {
+&nbsp;
+&nbsp;    private final AddressService addressService;
+&nbsp;
+&nbsp;    public  AddressController(AddressService addressService){
+&nbsp;
+<b class="fc">&nbsp;        this.addressService = addressService;</b>
+&nbsp;    }
+<b class="fc">&nbsp;</b>
+&nbsp;    //Create New Address
+&nbsp;    @PostMapping
+&nbsp;    public ResponseEntity&lt;Address&gt; createAddress(@Valid @RequestBody AddressDto addressDto){
+&nbsp;        System.out.println(&quot;Address Created: &quot; + addressDto); // For testing
+&nbsp;        Address saved = addressService.createAddress(addressDto);
+<b class="fc">&nbsp;</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok(saved);</b>
+&nbsp;    }
+<b class="fc">&nbsp;</b>
+&nbsp;    // Get one address
+&nbsp;    // GET: http://localhost:8080/api/addresses/{id}
+&nbsp;    @GetMapping(&quot;/{id}&quot;)
+&nbsp;    public ResponseEntity&lt;Address&gt; getAddress(@PathVariable Long id){
+&nbsp;        return ResponseEntity.ok(addressService.getAddressById(id));
+&nbsp;    }
+<b class="fc">&nbsp;</b>
+&nbsp;    // Get all addresses
+&nbsp;    // GET: http://localhost:8080/api/addresses
+&nbsp;    @GetMapping
+&nbsp;    public ResponseEntity&lt;List&lt;Address&gt;&gt; getAll() {
+&nbsp;        return ResponseEntity.ok(addressService.getAllAddresses());
+&nbsp;    }
+<b class="fc">&nbsp;</b>
+&nbsp;    // Update an existing customer
+&nbsp;    // PUT: http://localhost:8080/api/addresses/{id}
+&nbsp;    @PutMapping(&quot;/{id}&quot;)
+&nbsp;    public ResponseEntity&lt;Address&gt; updateAddress(@PathVariable Long id, @RequestBody AddressDto addressDto) {
+&nbsp;        Address updatedCustomer = addressService.updateAddress(id, addressDto);
+&nbsp;        return ResponseEntity.ok(updatedCustomer);
+<b class="fc">&nbsp;    }</b>
+<b class="fc">&nbsp;</b>
+&nbsp;    // Delete an address by ID
+&nbsp;    // DELETE: http://localhost:8080/api/addresses/{id}
+&nbsp;    @DeleteMapping(&quot;/{id}&quot;)
+&nbsp;    public ResponseEntity&lt;String&gt; deleteAddress(@PathVariable Long id) {
+&nbsp;        addressService.deleteAddress(id);
+&nbsp;        return ResponseEntity.ok(&quot;Customer deleted successfully.&quot;);
+<b class="fc">&nbsp;    }</b>
+<b class="fc">&nbsp;</b>
+&nbsp;    //Extra functionalities
+&nbsp;    @GetMapping(&quot;/city&quot;)
+&nbsp;    public ResponseEntity&lt;List&lt;Address&gt;&gt; getByCity(@RequestParam String city) {
+&nbsp;        return ResponseEntity.ok(addressService.getAddressesByCity(city));
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/postalcode&quot;)
+&nbsp;    public ResponseEntity&lt;List&lt;Address&gt;&gt; getByPostalCode(@RequestParam String code) {
+&nbsp;        return ResponseEntity.ok(addressService.getAddressesByPostalCode(code));
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-07-02 21:12</div>
+</div>
+</body>
+</html>

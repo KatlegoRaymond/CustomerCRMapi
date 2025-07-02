@@ -1,0 +1,207 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > AddressServiceImpl</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.bitroot.CustomerCRMapi.service.impl</a>
+</div>
+
+<h1>Coverage Summary for Class: AddressServiceImpl (com.bitroot.CustomerCRMapi.service.impl)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">AddressServiceImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (23/23)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.bitroot.CustomerCRMapi.service.impl;
+&nbsp;
+&nbsp;import com.bitroot.CustomerCRMapi.dto.AddressDto;
+&nbsp;import com.bitroot.CustomerCRMapi.exception.ResourceNotFoundException;
+&nbsp;import com.bitroot.CustomerCRMapi.model.Address;
+&nbsp;import com.bitroot.CustomerCRMapi.model.Customer;
+&nbsp;import com.bitroot.CustomerCRMapi.repository.AddressRepository;
+&nbsp;import com.bitroot.CustomerCRMapi.repository.CustomerRepository;
+&nbsp;import com.bitroot.CustomerCRMapi.service.AddressService;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@Service
+&nbsp;public class AddressServiceImpl implements AddressService {
+&nbsp;
+&nbsp;    private final AddressRepository addressRepo;
+&nbsp;    private final CustomerRepository customerRepo;
+&nbsp;
+<b class="fc">&nbsp;    public AddressServiceImpl(AddressRepository addressRepo, CustomerRepository customerRepo) {</b>
+<b class="fc">&nbsp;        this.addressRepo = addressRepo;</b>
+<b class="fc">&nbsp;        this.customerRepo = customerRepo;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    // Save a new address
+&nbsp;    @Override
+&nbsp;    public Address createAddress(AddressDto dto) {
+<b class="fc">&nbsp;        Customer customer = customerRepo.findById(dto.getCustomerId())</b>
+<b class="fc">&nbsp;                .orElseThrow(() -&gt; new ResourceNotFoundException(&quot;Customer not found with ID: &quot;+dto.getCustomerId()));</b>
+&nbsp;
+<b class="fc">&nbsp;        Address address = new Address();</b>
+<b class="fc">&nbsp;        address.setStreet(dto.getStreet());</b>
+<b class="fc">&nbsp;        address.setCity(dto.getCity());</b>
+<b class="fc">&nbsp;        address.setZipCode(dto.getZipCode());</b>
+<b class="fc">&nbsp;        address.setCustomer(customer); // Set the Customer Relationship</b>
+&nbsp;
+<b class="fc">&nbsp;        return addressRepo.save(address);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    // Get address by ID or throw custom exception
+&nbsp;    @Override
+&nbsp;    public Address getAddressById(Long id)
+&nbsp;    {
+<b class="fc">&nbsp;        return addressRepo.findById(id)</b>
+<b class="fc">&nbsp;            .orElseThrow(() -&gt; new ResourceNotFoundException(&quot;Address not found with ID: &quot; + id));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Get all addresses
+&nbsp;    @Override
+&nbsp;    public List&lt;Address&gt; getAllAddresses()
+&nbsp;    {
+<b class="fc">&nbsp;</b>
+&nbsp;        return addressRepo.findAll();
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public Address updateAddress(Long id, AddressDto addressDto) {
+<b class="fc">&nbsp;        // Check if the address exists</b>
+<b class="fc">&nbsp;        Address address = addressRepo.findById(id)</b>
+&nbsp;                .orElseThrow(() -&gt; new ResourceNotFoundException(&quot;Address not found with ID: &quot;+id));
+&nbsp;
+<b class="fc">&nbsp;        // Update the fields</b>
+<b class="fc">&nbsp;        address.setStreet(addressDto.getStreet());</b>
+<b class="fc">&nbsp;        address.setCity(addressDto.getCity());</b>
+&nbsp;        address.setZipCode(addressDto.getZipCode());
+&nbsp;
+<b class="fc">&nbsp;        // Save and return the updated address</b>
+&nbsp;        return addressRepo.save(address);
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void deleteAddress(Long id) {
+<b class="fc">&nbsp;        // Check if the address exists</b>
+<b class="fc">&nbsp;        Address address = addressRepo.findById(id)</b>
+&nbsp;                .orElseThrow(()-&gt; new ResourceNotFoundException(&quot;Address not found with ID: &quot; + id));
+&nbsp;
+<b class="fc">&nbsp;        //Delete the address</b>
+&nbsp;        addressRepo.delete(address);
+&nbsp;    }
+&nbsp;
+&nbsp;    //Extra Functionalities
+&nbsp;    @Override
+&nbsp;    public List&lt;Address&gt; getAddressesByCity(String city) {
+&nbsp;        List&lt;Address&gt; results = addressRepo.findByCityContainingIgnoreCase(city);
+&nbsp;        if (results.isEmpty()) {
+&nbsp;            throw new ResourceNotFoundException(&quot;No addresses found with city: &quot; + city);
+&nbsp;        }
+&nbsp;        return results;
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public List&lt;Address&gt; getAddressesByPostalCode(String postalCode) {
+&nbsp;        List&lt;Address&gt; results = addressRepo.findByZipCode(postalCode);
+&nbsp;        if (results.isEmpty()) {
+&nbsp;            throw new ResourceNotFoundException(&quot;No addresses found with postal code: &quot; + postalCode);
+&nbsp;        }
+&nbsp;        return results;
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-07-02 21:12</div>
+</div>
+</body>
+</html>

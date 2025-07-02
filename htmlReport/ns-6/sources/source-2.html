@@ -1,0 +1,223 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > CustomerServiceImpl</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.bitroot.CustomerCRMapi.service.impl</a>
+</div>
+
+<h1>Coverage Summary for Class: CustomerServiceImpl (com.bitroot.CustomerCRMapi.service.impl)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">CustomerServiceImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (19/19)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.bitroot.CustomerCRMapi.service.impl;
+&nbsp;
+&nbsp;import com.bitroot.CustomerCRMapi.dto.CustomerDto;
+&nbsp;import com.bitroot.CustomerCRMapi.exception.ResourceNotFoundException;
+&nbsp;import com.bitroot.CustomerCRMapi.model.Customer;
+&nbsp;import com.bitroot.CustomerCRMapi.repository.CustomerRepository;
+&nbsp;import com.bitroot.CustomerCRMapi.service.CustomerService;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;@Service
+&nbsp;public class CustomerServiceImpl implements CustomerService {
+&nbsp;
+&nbsp;    private final CustomerRepository customerRepo;
+<b class="fc">&nbsp;</b>
+<b class="fc">&nbsp;    public CustomerServiceImpl(CustomerRepository customerRepo) {</b>
+&nbsp;        this.customerRepo = customerRepo;
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;Customer&gt; findByFirstName(String firstName) {
+&nbsp;        return customerRepo.findByFirstNameContainingIgnoreCase(firstName);
+<b class="fc">&nbsp;                //.orElseThrow(() -&gt; new ResourceNotFoundException(&quot;Customer not found with Email: &quot; + firstName));</b>
+<b class="fc">&nbsp;    }</b>
+<b class="fc">&nbsp;</b>
+<b class="fc">&nbsp;    public List&lt;Customer&gt; findByLastName(String lastName) {</b>
+<b class="fc">&nbsp;        return null;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    // Save a new customer
+&nbsp;    @Override
+<b class="fc">&nbsp;    public Customer createCustomer(CustomerDto dto) {</b>
+<b class="fc">&nbsp;        Customer customer = new Customer();</b>
+&nbsp;        customer.setFirstName(dto.getFirstName());
+&nbsp;        customer.setLastName(dto.getLastName());
+&nbsp;        customer.setEmail(dto.getEmail());
+&nbsp;        return customerRepo.save(customer);
+&nbsp;    }
+<b class="fc">&nbsp;</b>
+&nbsp;    // Get customer by ID or throw custom exception
+&nbsp;    @Override
+&nbsp;    public Customer getCustomerById(Long id) {
+&nbsp;        return customerRepo.findById(id)
+&nbsp;                .orElseThrow(() -&gt; new ResourceNotFoundException(&quot;Customer not found with ID: &quot; + id));
+<b class="fc">&nbsp;    }</b>
+<b class="fc">&nbsp;</b>
+&nbsp;    // Get all customers
+&nbsp;    @Override
+<b class="fc">&nbsp;    public List&lt;Customer&gt; getAllCustomers() {</b>
+<b class="fc">&nbsp;</b>
+<b class="fc">&nbsp;        return customerRepo.findAll();</b>
+&nbsp;    }
+&nbsp;
+<b class="fc">&nbsp;    @Override</b>
+&nbsp;    public Customer updateCustomer(Long id, CustomerDto customerDto) {
+&nbsp;        // Find the customer, or throw an exception if not found
+&nbsp;        Customer customer = customerRepo.findById(id)
+&nbsp;                .orElseThrow(() -&gt; new ResourceNotFoundException(&quot;Customer not found with ID: &quot; + id));
+&nbsp;
+<b class="fc">&nbsp;        // Update the fields</b>
+<b class="fc">&nbsp;        customer.setFirstName(customerDto.getFirstName());</b>
+&nbsp;        customer.setLastName(customerDto.getLastName());
+&nbsp;        customer.setEmail(customerDto.getEmail());
+<b class="fc">&nbsp;</b>
+&nbsp;        // Save and return the updated customer
+&nbsp;        return customerRepo.save(customer);
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void deleteCustomer(Long id) {
+&nbsp;        // Check if the customer exists
+&nbsp;        Customer customer = customerRepo.findById(id)
+&nbsp;                .orElseThrow(() -&gt; new ResourceNotFoundException(&quot;Customer not found with ID: &quot; + id));
+&nbsp;
+&nbsp;        // Delete the customer
+&nbsp;        customerRepo.delete(customer);
+&nbsp;    }
+&nbsp;
+&nbsp;    //Extra Functionalities
+&nbsp;    @Override
+&nbsp;    public Customer getCustomerByEmail(String email) {
+&nbsp;        // Find the customer, or throw an exception if not found
+&nbsp;        Optional&lt;Customer&gt; customer = customerRepo.findByEmail(email);
+&nbsp;
+&nbsp;        if (customer.isEmpty()) {
+&nbsp;            throw new ResourceNotFoundException(&quot;No customers found with email: &quot; + email);
+&nbsp;        }
+&nbsp;
+&nbsp;        return customer.get();
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public List&lt;Customer&gt; getCustomerByFirstName(String name) {
+&nbsp;        // Find the customer, or throw an exception if not found
+&nbsp;        List&lt;Customer&gt; customer = customerRepo.findByFirstNameContainingIgnoreCase(name);
+&nbsp;
+&nbsp;        if (customer.isEmpty()) {
+&nbsp;            throw new ResourceNotFoundException(&quot;No customers found with first name: &quot; + name);
+&nbsp;        }
+&nbsp;
+&nbsp;        return customer;
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public List&lt;Customer&gt; getCustomerByLastName(String name) {
+&nbsp;        // Find the customer, or throw an exception if not found
+&nbsp;        List&lt;Customer&gt; customer = customerRepo.findByLastNameContainingIgnoreCase(name);
+&nbsp;
+&nbsp;        if (customer.isEmpty()) {
+&nbsp;            throw new ResourceNotFoundException(&quot;No customers found with last name: &quot; + name);
+&nbsp;        }
+&nbsp;
+&nbsp;        return customer;
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-07-02 21:12</div>
+</div>
+</body>
+</html>
